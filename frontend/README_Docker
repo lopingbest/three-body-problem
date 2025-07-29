@@ -1,0 +1,26 @@
+Deployment ke Server
+Bagian ini menjelaskan langkah-langkah untuk menarik (pull) dan menjalankan aplikasi di lingkungan server.
+
+1. Pull Perubahan Terbaru dari Repository
+Sebelum menjalankan atau memperbarui aplikasi Anda, pastikan Anda telah menarik semua perubahan terbaru dari repository Git Anda.
+
+Bash
+
+git pull origin main # Sesuaikan 'main' jika branch utama Anda adalah 'master' atau nama lain
+2. Jalankan Aplikasi Menggunakan Docker Compose
+Setelah menarik perubahan, Anda dapat membangun kembali image Docker dan menjalankan semua layanan aplikasi (aplikasi Laravel, Nginx, MySQL, dll.) menggunakan Docker Compose.
+
+Bash
+
+docker compose up -d --build
+
+*docker compose up: Memulai layanan yang didefinisikan dalam docker-compose.yml.
+
+-d: Menjalankan kontainer di latar belakang (detached mode).
+
+--build: Membangun ulang gambar Docker. Ini penting jika Anda telah mengubah Dockerfile atau menambahkan dependensi baru di composer.json yang memerlukan pembangunan ulang image PHP-FPM.
+
+Catatan Penting:
+Pastikan Docker dan Docker Compose telah terinstal di server Anda.
+
+Periksa file .env di proyek Anda untuk memastikan konfigurasi database dan lingkungan lainnya sudah sesuai dengan server Anda.
