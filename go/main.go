@@ -6,10 +6,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
 
+	"github.com/joho/godotenv"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -37,22 +39,38 @@ type APIResponse struct {
 // Database connection
 var db *sql.DB
 
-// Database configuration
-const (
-	DBDriver   = "mysql"
-	DBUser     = "root"
-	DBPassword = ""
-	DBName     = "laravel"
-	DBHost     = "127.0.0.1"
-	DBPort     = "3306"
-)
+// Database configuration functions
+func getEnv(key, defaultValue string) string {
+	if value := os.Getenv(key); value != "" {
+		return value
+	}
+	return defaultValue
+}
+
+func getDBConfig() (driver, user, password, name, host, port string) {
+	driver = getEnv("DB_DRIVER", "mysql")
+	user = getEnv("DB_USER", "root")
+	password = getEnv("DB_PASSWORD", "")
+	name = getEnv("DB_NAME", "laravel")
+	host = getEnv("DB_HOST", "127.0.0.1")
+	port = getEnv("DB_PORT", "3306")
+	return
+}
 
 // Initialize database connection
 func initDB() {
+	// Load environment variables from .env file
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found, using default environment variables")
+	}
+
 	var err error
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", DBUser, DBPassword, DBHost, DBPort, DBName)
+	driver, user, password, name, host, port := getDBConfig()
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", user, password, host, port, name)
 	
-	db, err = sql.Open(DBDriver, dsn)
+	log.Printf("Connecting to database: %s@%s:%s/%s", user, host, port, name)
+	
+	db, err = sql.Open(driver, dsn)
 	if err != nil {
 		log.Printf("Error opening database: %v", err)
 		log.Println("Continuing without database connection...")

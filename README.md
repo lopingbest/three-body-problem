@@ -28,6 +28,7 @@ php artisan serve --port=8001
 ### 🐹 Go API (Port 8080)
 ```bash
 cd go
+cp .env.example .env
 go mod tidy
 go run main.go
 ```
