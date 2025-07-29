@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  react-app:
+    build: .
+    container_name: react_dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules  # Hindari overwrite dari host
+    environment:
+      - CHOKIDAR_USEPOLLING=true  # Supaya hot reload tetap jalan di volume
+    command: npm start
