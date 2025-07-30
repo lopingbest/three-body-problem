@@ -1,0 +1,34 @@
+# Nama workflow yang akan tampil di tab "Actions" GitHub
+name: Docker Deploy on Push to Laravel Branch
+
+# Trigger workflow saat terjadi push atau pull request ke branch "laravel"
+on:
+  push:
+    branches:
+      - laravel        # ✅ Trigger hanya saat ada push ke branch "laravel"
+  pull_request:
+    branches:
+      - laravel        # ✅ Trigger juga saat ada PR menuju branch "laravel"
+
+jobs:
+  deploy:              # Nama job, bisa bebas
+
+    # Gunakan runner Ubuntu terbaru dari GitHub (dengan Docker pre-installed)
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout isi repository ke runner
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        # Plugin resmi dari GitHub untuk menarik (clone) isi repo
+
+      # Step 2: Setup Docker Buildx (fitur build yang lebih canggih)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        # Buildx digunakan untuk membangun image multi-platform, caching, dsb
+
+      # Step 3: Jalankan Docker Compose untuk build dan start container
+      - name: Run Docker Compose
+        run: docker compose up --build -d
+        # --build = paksa rebuild image (jika Dockerfile berubah)
+        # -d = jalankan container di background (detached mode)
