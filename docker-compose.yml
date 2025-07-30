@@ -14,4 +14,4 @@ services:
 
 networks:
   laravel_net:
-    external: {}
+    driver: bridge   # ✅ Buat jaringan biasa (internal), bukan external
