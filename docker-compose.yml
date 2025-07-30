@@ -14,4 +14,4 @@ services:
 
 networks:
   laravel_net:
-    external: bridge
+    external: {}
